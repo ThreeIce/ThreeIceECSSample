@@ -18,6 +18,7 @@ using Unity.Collections;
 //[AlwaysUpdateSystem]这个特性可以让系统即使不满足运行条件也一直运行下去，不被Unity自动暂停
 //[UpdateAfter(xx)][UpdateBefore(xx)]可以控制系统的执行顺序
 //[DisableAutoCreation]可以让系统不在启动时被添加到默认世界中
+[DisableAutoCreation]//因目前不处于该节所以禁用，若想测试将该行删掉并把最新节的系统加上此行即可
 public class TestComponentSystem : ComponentSystem
 {
     /// <summary>
@@ -67,7 +68,7 @@ public class TestComponentSystem : ComponentSystem
         //意思是只要TestSharedComponentData的Value为2的组件，如果是1或3都不要，起筛选作用，不过目前似乎只有SharedComponent支持作为筛选依据
         eq.SetSharedComponentFilter(new TestSharedComponentData(){ Value = 2});//value为1的筛不出来，为什么可以思考一下（滑稽）
         //筛选组件版本改过的实体，这个版本系统很坑，不仅修改数据会更改，作为ReadWrite访问过也会，使用请慎重，概率筛到目标组件数据没变过的实体
-        //eq.SetChangedVersionFilter(ComponentType.ReadWrite<TestComponentData>());
+        eq.SetChangedVersionFilter(ComponentType.ReadWrite<TestComponentData>());
     }
     /// <summary>
     /// 该函数相当于MonoBehaviour中的Update，每帧调用，默认是和Update同一个时机，不过也可以修改成PrelateUpdate同一个时机等，讲系统组时会讲到
@@ -85,6 +86,8 @@ public class TestComponentSystem : ComponentSystem
         //foreach的意思是迭代所有匹配到的实体，Entity e这行参数可以删了也可以留着，看你处理时需不需要这个信息了
         //组件前缀必须用ref，因为是组件是个struct，不用ref你修改的数据没法保存~
         //该方法只能改IComponentData，不过是同步运行的，用e和EntityManager还是有操作空间的
+        
+
         this.Entities.With(eq).ForEach<TestComponentData>((Entity e,ref TestComponentData data)=>{
             data.Value += 1;
             //举个操作空间的例子

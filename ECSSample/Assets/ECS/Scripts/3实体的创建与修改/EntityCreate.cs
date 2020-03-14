@@ -65,7 +65,9 @@ public class EntityCreate : MonoBehaviour
     {
         //由于现在在MonoBehaviour里执行代码，MonoBehaviour并不属于任何一个世界，没有对任何一个世界的引用
         //所以必须手动选择一个要操作的世界，在这个世界中生成Entity
-        world = World.AllWorlds[0];//默认情况下，unity会在开始运行时自动给我们创建一个默认世界
+        //默认情况下，unity会在开始运行时自动给我们创建一个默认世界
+        /*world = World.AllWorlds[0];*/   //该API在0.7版本中已改名
+        world = World.All[0];
         //没创建其它世界的话这个列表里就只会有这一个世界。
         EntityManager = world.EntityManager;//获得该世界的EntityManager，通过EntityManager对世界中的实体操作
         Create1();
